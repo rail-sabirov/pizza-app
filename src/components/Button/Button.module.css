@@ -1,12 +1,28 @@
 .button {
-	border-radius: var(--border-radius);
+	--button-height: 44px;
+	--button-border-radius: 28px;
+
+	border-radius: var(--button-border-radius);
 	border: none;
 	padding: 8px 30px;
 	font-family: inherit;
 	font-size: var(--font-size);
+	font-weight: 400;
 	cursor: pointer;
 	transition: background 0.25s;
 	color: var(--white-color);
+	padding: 10px 25px;
+	height: var(--button-height);
+	line-height: var(--font-size);
+}
+
+.big {
+	--button-height: 60px;
+
+	text-transform: uppercase;
+	font-size: 15px;
+	height: var(--button-height);
+	padding: 20px 60px;
 }
 
 .accent:hover {
