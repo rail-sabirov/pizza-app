@@ -6,6 +6,7 @@
 	font-size: var(--font-size);
 	cursor: pointer;
 	transition: background 0.25s;
+	color: var(--text-wite);
 }
 
 .accent:hover {

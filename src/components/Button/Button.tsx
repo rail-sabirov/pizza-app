@@ -1,8 +1,8 @@
 import styles from './Button.module.css';
 import cn from 'classnames';
 import { ButtonProps } from './Button.props';
-import { FC } from 'react';
 
+// Параметры функции из описанного внешнего файла
 function Button( { children, className, ...props }: ButtonProps ) {
 	return (
 		<button 
