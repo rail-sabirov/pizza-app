@@ -20,11 +20,6 @@ function App() {
       <Button onClick={ addCounter }>Button</Button>
       <Button size="big">Big Button</Button>
       <Input placeholder='test'/>
-
-      <div>
-        <a href="/">Menu</a> | <a href="/cart">Cart</a>
-      </div>
-
     </>
   )
 }

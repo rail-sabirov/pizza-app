@@ -7,12 +7,24 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Menu } from './pages/Menu/Menu';
 import { Cart } from './pages/Cart/Cart';
 import { Error } from './pages/Error/Error';
+import { Layout } from './layouts/Menu/Menu.tsx';
 
 // Описываем роуты к страницам, ниже добавляем RouterProvider
 const router = createBrowserRouter([
-  { path: '/', element: <Menu /> },
-  { path: '/cart', element: <Cart /> },
+  { 
+    path: '/', 
+    element: <Layout />, 
+
+    // Вложенные роуты, будут отображаться в <Outlet />
+    children: [
+      { path: '/', element: <Menu /> },
+      { path: '/cart', element: <Cart /> },
+    ]
+  },
+
+  // Обработка других, не зарегистрированных путей
   { path: '*', element: <Error /> },
+  
 ]);
 
 
