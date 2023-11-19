@@ -1,3 +1,3 @@
 export function Menu() {
-    return <>Menu Page</>
+    return <h1>Menu Page</h1>
 }

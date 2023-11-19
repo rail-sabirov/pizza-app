@@ -27,6 +27,10 @@
 .link:hover {
     color: var(--primary-color);
 }
+.active {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
 
 .user {
     margin-bottom: 46px;

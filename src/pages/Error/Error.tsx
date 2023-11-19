@@ -1,3 +1,3 @@
 export function Error() {
-    return <>Error</>
+    return <h1>Error</h1>
 }
