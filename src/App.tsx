@@ -16,10 +16,6 @@ function App() {
 
   return (
     <>
-      <p>{ counter }</p>
-      <Button onClick={ addCounter }>Button</Button>
-      <Button size="big">Big Button</Button>
-      <Input placeholder='test'/>
     </>
   )
 }

@@ -1,18 +1,21 @@
 :root {
   --border-radius: 6px;
-  --font-size: 16px;
-  --text-wite: #ffffffe0;
 
   --primary-color: #FE724C;
   --primary-hover-color: #db502a;
-  --text-secondary-color: #5B5B5E;
-  --white-color: #FFF;
-  --text-color: #000;
   --separator-color: #D4D6E0;
+  --white-color: #FFF;
 
   --font: 'Open Sans', sans-serif;
+  --font-size: 16px;
+  
+  --text-wite: #ffffffe0;
+  --text-secondary-color: #5B5B5E;
+  --text-color: #000;
 }
 
 body {
   font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
 }

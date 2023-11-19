@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Menu } from './pages/Menu/Menu';
 import { Cart } from './pages/Cart/Cart';
 import { Error } from './pages/Error/Error';
-import { Layout } from './layouts/Menu/Menu.tsx';
+import { Layout } from './layouts/Layout/Layout.tsx';
 
 // Описываем роуты к страницам, ниже добавляем RouterProvider
 const router = createBrowserRouter([
