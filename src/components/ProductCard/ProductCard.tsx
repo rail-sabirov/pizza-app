@@ -3,7 +3,7 @@ import styles from './ProductCard.module.css';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
-function ProductCard({ id, title, price, description, image, rating, ...props }: ProductCardProps) {
+function ProductCard({ id, name, price, ingredients, image, rating, ...props }: ProductCardProps) {
     const cardBackgroundStyle = {
         backgroundImage: `url('${image}')`
     };
@@ -26,8 +26,8 @@ function ProductCard({ id, title, price, description, image, rating, ...props }:
                     </div>
                 </div>
                 <div className={styles['footer']}>
-                    <div className={styles['product-title']}>{title}</div>
-                    <div className={styles['product-desc']}>{description}</div>
+                    <div className={styles['product-title']}>{name}</div>
+                    <div className={styles['product-desc']}>{ingredients}</div>
                 </div>
             </div>
         </Link>

@@ -2,8 +2,8 @@ import { HTMLAttributes } from 'react';
 
 export interface ProductCardProps {
     id: number;
-    title: string;
-    description: string;
+    name: string;
+    ingredients: string[];
     image: string;
     price: number;
     rating: number;
