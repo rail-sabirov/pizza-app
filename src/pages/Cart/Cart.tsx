@@ -1,3 +1,9 @@
+import Headling from '../../components/Headling/Headling';
+
 export function Cart() {
-    return <h1>Cart page</h1>;
+    return <>
+        <Headling>
+            Cart page
+        </Headling>
+    </>;
 }
