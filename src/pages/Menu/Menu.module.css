@@ -1,4 +1,10 @@
+.menu-page-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 9px;
+}
 .header-container {
 	display: flex;
 	justify-content: space-between;
 }
+

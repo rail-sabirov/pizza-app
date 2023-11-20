@@ -10,11 +10,11 @@ function ProductCard({ id, title, price, description, image, rating, ...props }:
 
     console.log(styles);
     return (<>
-        <Link to='/' className={ styles['link'] }>
+        <Link to={`/product/${id}`} className={ styles['link'] }>
             <div {...props} className={cn(styles['product-card-container'])}>
                 <div className={cn(styles['head'])} style={ cardBackgroundStyle }>
-                    <div className={styles['price']}>&nbsp;
-                        <span className={styles['currency']}>$</span>
+                    <div className={styles['price']}>
+                        <span className={styles['currency']}>$</span>&nbsp;
                         {price}
                     </div>
                     <button className={styles['button']}>
