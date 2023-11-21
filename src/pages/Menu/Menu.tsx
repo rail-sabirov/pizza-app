@@ -6,6 +6,7 @@ import { PREFIX } from '../../helpers/API';
 import { IProduct } from '../../interfaces/product.interface';
 import styles from './Menu.module.css';
 import cn from 'classnames';
+import axios from 'axios';
 
 export function Menu() {
     // Отслеживаение получение данных о продуктах, с типизацией
@@ -13,23 +14,15 @@ export function Menu() {
 
     // Попучаем продукты с REST API - сервера
     const getMenu = async () => {
+        // Получение данных через Axios
         try {
-            const res = await fetch(`${PREFIX}/products`);
+            // Используем дженерик для получения данных нужного типа
+            const { data } = await axios.get<IProduct[]>(`${PREFIX}/products`);
 
-            // Проверим, если плохо, выходим
-            if(!res.ok) {
-                return;
-            }
-
-            // Получаем данные в формате json
-            const data = await res.json() as IProduct[];
-
-            // После получения данных обвновляем состояние массива продуктов
+            // Обновляем список продуктов, полученными данными
             setProducts(data);
-        
         } catch(e) {
-            console.error(e);
-
+            console.log(e);
             return;
         }
     };
