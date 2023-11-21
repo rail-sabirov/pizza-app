@@ -12,6 +12,9 @@ export function Menu() {
     // Отслеживаение получение данных о продуктах, с типизацией
     const [product, setProducts] = useState<IProduct[]>([]);
 
+    // Флаг окончания загрузки данных с сервера
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
     // Попучаем продукты с REST API - сервера
     const getMenu = async () => {
         // Получение данных через Axios
@@ -21,6 +24,10 @@ export function Menu() {
 
             // Обновляем список продуктов, полученными данными
             setProducts(data);
+
+            // Обновляем флаг, после окончания загрузки
+            setIsLoaded(true);
+
         } catch(e) {
             console.log(e);
             return;
@@ -40,7 +47,7 @@ export function Menu() {
         </div>
 
         <div className={cn(styles['menu-page-container'])}>
-            { product.map(p => (
+            { isLoaded && product.map(p => (
                 <ProductCard 
                     key={p.id}
                     id={p.id}
@@ -51,6 +58,8 @@ export function Menu() {
                     price={p.price}
                 />
             )) }
+
+            { !isLoaded && <>Loading products...</>}
           
           
         </div>
