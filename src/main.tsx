@@ -33,7 +33,9 @@ const router = createBrowserRouter([
           const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
 
           return data;
-        } 
+        },
+
+        errorElement: <>Error, we have a problem</>
       }
     ]
   },
