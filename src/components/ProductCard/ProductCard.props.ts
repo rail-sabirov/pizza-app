@@ -1,5 +1,3 @@
-import { HTMLAttributes } from 'react';
-
 export interface ProductCardProps {
     id: number;
     name: string;
