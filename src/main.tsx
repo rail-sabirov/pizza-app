@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
@@ -21,7 +21,14 @@ const router = createBrowserRouter([
 
     // Вложенные роуты, будут отображаться в <Outlet />
     children: [
-      { path: "/", element: <LazyMenuPage /> },
+      {
+        path: "/",
+        element: (
+          <Suspense fallback={<>Page is Loading...</>} >
+            <LazyMenuPage />
+          </Suspense>
+        ),
+      },
       { path: "/cart", element: <Cart /> },
 
       // Роут с параметров id
