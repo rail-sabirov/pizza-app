@@ -9,12 +9,37 @@ import { Layout } from './layouts/Layout/Layout.tsx';
 import Product from './pages/Product/Product.tsx';
 import { PREFIX } from './helpers/API.ts';
 import axios from 'axios';
+import { AuthLayout } from './layouts/AuthLayout/AuthLayout.tsx';
+import { LoginPage } from './pages/LoginPage/LoginPage.tsx';
+import { RegisterPage } from './pages/RegisterPage/RegisterPage.tsx';
 
 // Для ленивой загрузки страницы с меню, импортируем только при переходе на нее
 const LazyMenuPage = lazy(() => import('./pages/Menu/Menu'));
 
 // Описываем роуты к страницам, ниже добавляем RouterProvider
 const router = createBrowserRouter([
+  // Auth
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+      {
+        path: "register",
+        element: <RegisterPage />,
+      },
+      {
+        path: '*',
+        element: <Error />
+      }
+    ],
+    errorElement: <Error />
+  },
+
+  // Общий layout после авторизации
   {
     path: "/",
     element: <Layout />,
@@ -24,11 +49,12 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <Suspense fallback={<>Page is Loading...</>} >
+          <Suspense fallback={<>Page is Loading...</>}>
             <LazyMenuPage />
           </Suspense>
         ),
       },
+
       { path: "/cart", element: <Cart /> },
 
       // Роут на страницу продукта, используя его id
@@ -38,21 +64,18 @@ const router = createBrowserRouter([
 
         // Предзагружаем данные ассинхронно
         loader: async ({ params }) => {
-          
           // используем defer для получения ассинхронных данных и возврата свойства data
           return defer({
-          
             // получаем результат используя параметры (params) строки роута
             data: await axios
               .get(`${PREFIX}/products/${params.id}`)
-              .then(data => data)
+              .then((data) => data),
           });
         },
 
         // Выводим при ошибке
         errorElement: <>Error, we have a problem</>,
       },
-      
     ],
   },
 
