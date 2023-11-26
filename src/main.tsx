@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, defer, RouterProvider } from 'react-router-dom';
 import { Cart } from './pages/Cart/Cart';
 import { Error } from './pages/Error/Error';
 import { Layout } from './layouts/Layout/Layout.tsx';
@@ -31,21 +31,28 @@ const router = createBrowserRouter([
       },
       { path: "/cart", element: <Cart /> },
 
-      // Роут с параметров id
+      // Роут на страницу продукта, используя его id
       {
         path: "/product/:id",
         element: <Product />,
 
-        // ассинхронно вызываем метод, потому что там axios
+        // Предзагружаем данные ассинхронно
         loader: async ({ params }) => {
-          // получаем результат используя параметры (params) строки роута
-          const { data } = await axios.get(`${PREFIX}/products/${params.id}`);
-
-          return data;
+          
+          // используем defer для получения ассинхронных данных и возврата свойства data
+          return defer({
+          
+            // получаем результат используя параметры (params) строки роута
+            data: await axios
+              .get(`${PREFIX}/products/${params.id}`)
+              .then(data => data)
+          });
         },
 
+        // Выводим при ошибке
         errorElement: <>Error, we have a problem</>,
       },
+      
     ],
   },
 
