@@ -3,21 +3,68 @@ import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './LoginPage.module.css';
 import Headling from '../../components/Headling/Headling';
-import { FormEvent, FormEventHandler } from 'react';
+import { FormEvent, FormEventHandler, useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import { PREFIX } from '../../helpers/API';
+
+// Тип для данных форм
+export type LoginForm = {
+	email: { value: string };
+	password: { value: string };
+};
+
 
 export function LoginPage() {
-	const submit: FormEventHandler<HTMLFormElement> = (event: FormEvent) => {
+	// Состояние для отслеживания ошибки
+	const [error, setError] = useState<string | null>();
+
+	// Функция для отправки логина и пароля через POST запрос 
+	// и получение access_token от API сервера
+	// -> (для теста a@gmail.com, 123)
+	const sendLogin = async (email: string, password: string) => {
+		try {
+			// Ожидаем получение ответа
+			const { data } = await axios.post(`${PREFIX}/auth/login`, {
+				email,
+				password
+			});
+
+			console.log('Receive data from server after send login credentials!');
+			console.log(data);
+		
+		} catch(err) {
+			// Ошибка от Axios
+			if (err instanceof AxiosError) {
+				// можно так же получить response
+				setError(err.response?.data.message);
+			}
+
+		}
+	};
+
+	// Функция для отработки onSubmit формы
+	const submit: FormEventHandler<HTMLFormElement> = async (event: FormEvent) => {
 		// Тормозим процесс отправки формы
 		event.preventDefault();
 
-		// Получаем данные из формы и проеобразуем в объект
-		const data = new FormData(event.target as HTMLFormElement);
-		console.log(Object.fromEntries(data));
+		// Очищаем предыдущие ошибки
+		setError(null);
+
+		// Задаем union тип для 
+		const target = event.target as typeof event.target & LoginForm;
+		const { email, password } = target;
+
+		// Логинимся
+		await sendLogin(email.value, password.value);
 	}
 
 	return (<div className={ styles['login-container'] }>
 		<Headling>Login</Headling>
 		
+		<div className={styles['error']}>
+			{ error }
+		</div>
+
 		<form className={styles['form']} onSubmit={ submit }>
 			<div className={styles['field']}>
 				<label htmlFor='email'>Email</label>
