@@ -12,6 +12,7 @@ import axios from 'axios';
 import { AuthLayout } from './layouts/AuthLayout/AuthLayout.tsx';
 import { LoginPage } from './pages/LoginPage/LoginPage.tsx';
 import { RegisterPage } from './pages/RegisterPage/RegisterPage.tsx';
+import { RequireAuth } from './helpers/RequireAuth.tsx';
 
 // Для ленивой загрузки страницы с меню, импортируем только при переходе на нее
 const LazyMenuPage = lazy(() => import('./pages/Menu/Menu'));
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
   // Общий layout после авторизации
   {
     path: "/",
-    element: <Layout />,
+    element: <RequireAuth><Layout /> </RequireAuth>,
 
     // Вложенные роуты, будут отображаться в <Outlet />
     children: [

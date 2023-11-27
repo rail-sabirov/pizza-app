@@ -61,9 +61,7 @@ export function LoginPage() {
 	return (<div className={ styles['login-container'] }>
 		<Headling>Login</Headling>
 		
-		<div className={styles['error']}>
-			{ error }
-		</div>
+		{ !!error ? <div className={styles['error']}>{ error }</div> :  '' }
 
 		<form className={styles['form']} onSubmit={ submit }>
 			<div className={styles['field']}>
