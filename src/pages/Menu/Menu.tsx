@@ -33,8 +33,6 @@ export function Menu() {
             setIsLoaded(true);
 
         } catch(e) {
-            console.log(e);
-
             // В этом блоке ошибка может быть связана с Axios
             if(e instanceof AxiosError) {
                 setError(e.message);

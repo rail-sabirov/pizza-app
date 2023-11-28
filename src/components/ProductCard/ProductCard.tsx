@@ -8,7 +8,6 @@ function ProductCard({ id, name, price, ingredients, image, rating, ...props }: 
         backgroundImage: `url('${image}')`
     };
 
-    console.log(styles);
     return (<>
         <Link to={`/product/${id}`} className={ styles['link'] }>
             <div {...props} className={cn(styles['product-card-container'])}>

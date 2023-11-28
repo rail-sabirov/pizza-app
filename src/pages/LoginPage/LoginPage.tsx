@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './LoginPage.module.css';
@@ -6,6 +6,7 @@ import Headling from '../../components/Headling/Headling';
 import { FormEvent, FormEventHandler, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { PREFIX } from '../../helpers/API';
+import { ILoginResponse } from '../../interfaces/auth.interface';
 
 // Тип для данных форм
 export type LoginForm = {
@@ -18,19 +19,25 @@ export function LoginPage() {
 	// Состояние для отслеживания ошибки
 	const [error, setError] = useState<string | null>();
 
+	// Для перехода после авторизации на главную страницу
+	const navigate = useNavigate();
+
 	// Функция для отправки логина и пароля через POST запрос 
 	// и получение access_token от API сервера
 	// -> (для теста a@gmail.com, 123)
 	const sendLogin = async (email: string, password: string) => {
 		try {
-			// Ожидаем получение ответа
-			const { data } = await axios.post(`${PREFIX}/auth/login`, {
+			// Ожидаем получение ответа, отвер в формате ILoginResponse
+			const { data } = await axios.post<ILoginResponse>(`${PREFIX}/auth/login`, {
 				email,
 				password
 			});
 
-			console.log('Receive data from server after send login credentials!');
-			console.log(data);
+			// Сохраняем полученный токен в localStorage
+			localStorage.setItem('jwt', data.access_token);
+
+			// Переходим на главную страницу
+			navigate('/');
 		
 		} catch(err) {
 			// Ошибка от Axios

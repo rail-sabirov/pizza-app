@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
 export function RequireAuth({ children }: {children: ReactNode}) {
-    const jwt = 'null';
+    const jwt = localStorage.getItem('jwt');
 
     if (!jwt) {
         // Navigate - Это типа Redirect 

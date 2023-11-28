@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './Layout.module.css';
 import Button from '../../components/Button/Button';
 import { useEffect } from 'react';
@@ -6,13 +6,13 @@ import cn from 'classnames';
 
 
 export function Layout() {
-    // Для получения данных об текущем адресе
-    const location = useLocation();
+    const navigate = useNavigate();
 
-    // Отслеживаем изменение адреса
-    useEffect(() => {
-        console.log(location)
-    }, [location]);
+    // Для кнопки выход, очищаем jwt-токен, т.е. выходим из системы
+    const logout = () => {
+      localStorage.removeItem('jwt');
+      navigate('/auth/login');
+    }
 
     return (
       <div className={styles["layout"]}>
@@ -43,7 +43,7 @@ export function Layout() {
           </div>
 
           <div className={styles["exit-button-container"]}>
-            <Button className={styles['exit-button']}>
+            <Button className={styles['exit-button']} onClick={ logout }>
                 <img className={styles['exit-button-icon']} src="/exit-icon.svg" alt="Exit icon" />
                 Exit
             </Button>
