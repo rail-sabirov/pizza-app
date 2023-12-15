@@ -7,6 +7,9 @@ import { FormEvent, FormEventHandler, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { PREFIX } from '../../helpers/API';
 import { ILoginResponse } from '../../interfaces/auth.interface';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
+import { userActions } from '../../store/user.slice';
 
 // Тип для данных форм
 export type LoginForm = {
@@ -22,6 +25,9 @@ export function LoginPage() {
 	// Для перехода после авторизации на главную страницу
 	const navigate = useNavigate();
 
+	// Хранилище: вызываем хук для получения нашей dispatch функции, для работы
+	const dispatch = useDispatch<AppDispatch>();
+
 	// Функция для отправки логина и пароля через POST запрос 
 	// и получение access_token от API сервера
 	// -> (для теста a@gmail.com, 123)
@@ -35,6 +41,9 @@ export function LoginPage() {
 
 			// Сохраняем полученный токен в localStorage
 			localStorage.setItem('jwt', data.access_token);
+
+			// Добавить в redux
+			dispatch(userActions.addJwt(data.access_token));
 
 			// Переходим на главную страницу
 			navigate('/');
