@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {PayloadAction, createSlice} from "@reduxjs/toolkit";
 
 // Тип для jwt для хранения внутри slice
 export interface IUserState {
@@ -17,7 +17,7 @@ export const userSlice = createSlice({
     reducers: {
         // Добавление jwt - токена
         // Сам токен будет в виде объекта, в котором { payload: string } содержит строку токена
-        addJwt: (preState, action) => {
+        addJwt: (preState, action: PayloadAction<string>) => {
             preState.jwt = action.payload;
         },
 
