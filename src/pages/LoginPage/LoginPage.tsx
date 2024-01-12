@@ -40,15 +40,16 @@ export function LoginPage() {
 			});
 
 			// Сохраняем полученный токен в localStorage
-			localStorage.setItem('jwt', data.access_token);
+			// старый способ: localStorage.setItem('userData', { jwt: data.access_token });
+			// новый способ : мы использовать подписку у redux, store.subscribe(), который автоматом сохраняет токен-- токен
 
 			// Добавить в redux
 			dispatch(userActions.addJwt(data.access_token));
 
 			// Переходим на главную страницу
 			navigate('/');
-		
-		} catch(err) {
+
+		} catch (err) {
 			// Ошибка от Axios
 			if (err instanceof AxiosError) {
 				// можно так же получить response
@@ -74,24 +75,24 @@ export function LoginPage() {
 		await sendLogin(email.value, password.value);
 	}
 
-	return (<div className={ styles['login-container'] }>
+	return (<div className={styles['login-container']}>
 		<Headling>Login</Headling>
-		
-		{ !!error ? <div className={styles['error']}>{ error }</div> :  '' }
 
-		<form className={styles['form']} onSubmit={ submit }>
+		{!!error ? <div className={styles['error']}>{error}</div> : ''}
+
+		<form className={styles['form']} onSubmit={submit}>
 			<div className={styles['field']}>
 				<label htmlFor='email'>Email</label>
 				<Input name='email' type='email' id='email' placeholder='Email' />
 			</div>
 			<div className={styles['field']}>
 				<label htmlFor='password'>Password</label>
-				<Input name='password' type='password' id='password' placeholder='Password'/>
+				<Input name='password' type='password' id='password' placeholder='Password' />
 			</div>
 			<Button type='submit' size='big'>Login</Button>
 		</form>
-		
-		<div className={ styles['footer'] }>
+
+		<div className={styles['footer']}>
 			<div>Don't have an account?</div>
 			<Link to='/auth/register'>Register</Link>
 		</div>
