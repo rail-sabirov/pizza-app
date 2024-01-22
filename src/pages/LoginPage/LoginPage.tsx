@@ -3,11 +3,11 @@ import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './LoginPage.module.css';
 import Headling from '../../components/Headling/Headling';
-import { FormEvent, FormEventHandler, useEffect, useState } from 'react';
+import { FormEvent, FormEventHandler, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootStore } from '../../store/store';
-import { asyncLogin } from '../../store/user.slice';
+import { asyncLogin, userActions } from '../../store/user.slice';
 
 // Тип для данных форм
 export type LoginForm = {
@@ -17,17 +17,14 @@ export type LoginForm = {
 
 
 export function LoginPage() {
-	// Состояние для отслеживания ошибки
-	const [error, setError] = useState<string | null>();
-
 	// Для перехода после авторизации на главную страницу
 	const navigate = useNavigate();
 
 	// Хранилище: вызываем хук для получения нашей dispatch функции, для работы
 	const dispatch = useDispatch<AppDispatch>();
 
-	// Хранилище: получаем jwt при его изменении
-	const jwt = useSelector((state: RootStore) => state.user.jwt);
+	// Хранилище: подписываемся на изменение jwt и ошибку авторизации
+	const { jwt, loginErrorMessage } = useSelector((state: RootStore) => state.user);
 
 	// Если jwt-токен есть, переходимуем на главную страницу
 	useEffect(() => {
@@ -41,32 +38,6 @@ export function LoginPage() {
 	// -> (для теста API сервера: a@gmail.com, 123)
 	const sendLogin = async (email: string, password: string) => {
 		dispatch(asyncLogin({ email, password }));
-
-		// try {
-		// 	// Ожидаем получение ответа, отвер в формате ILoginResponse
-		// 	const { data } = await axios.post<ILoginResponse>(`${PREFIX}/auth/login`, {
-		// 		email,
-		// 		password
-		// 	});
-
-		// 	// Сохраняем полученный токен в localStorage
-		// 	// старый способ: localStorage.setItem('userData', { jwt: data.access_token });
-		// 	// новый способ : мы использовать подписку у redux, store.subscribe(), который автоматом сохраняет токен-- токен
-
-		// 	// Добавить в redux
-		// 	dispatch(userActions.addJwt(data.access_token));
-
-		// 	// Переходим на главную страницу
-		// 	navigate('/');
-
-		// } catch (err) {
-		// 	// Ошибка от Axios
-		// 	if (err instanceof AxiosError) {
-		// 		// можно так же получить response
-		// 		setError(err.response?.data.message);
-		// 	}
-
-		// }
 	};
 
 	// Функция для отработки onSubmit формы
@@ -75,7 +46,7 @@ export function LoginPage() {
 		event.preventDefault();
 
 		// Очищаем предыдущие ошибки
-		setError(null);
+		dispatch(userActions.clearLoginErrorMessage());
 
 		// Задаем union тип для 
 		const target = event.target as typeof event.target & LoginForm;
@@ -88,7 +59,7 @@ export function LoginPage() {
 	return (<div className={styles['login-container']}>
 		<Headling>Login</Headling>
 
-		{!!error ? <div className={styles['error']}>{error}</div> : ''}
+		{!!loginErrorMessage ? <div className={styles['error']}>{loginErrorMessage}</div> : ''}
 
 		<form className={styles['form']} onSubmit={submit}>
 			<div className={styles['field']}>
