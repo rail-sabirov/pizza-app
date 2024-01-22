@@ -1,16 +1,22 @@
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styles from './Layout.module.css';
 import Button from '../../components/Button/Button';
-import { useEffect } from 'react';
+
 import cn from 'classnames';
+import { AppDispatch } from '../../store/store';
+import { userActions } from '../../store/user.slice';
+import { useDispatch } from 'react-redux';
 
 
 export function Layout() {
   const navigate = useNavigate();
 
+  // создадим ссылку на dispatch нашего хранилища
+  const dispatch = useDispatch<AppDispatch>();
+
   // Для кнопки выход, очищаем jwt-токен, т.е. выходим из системы
   const logout = () => {
-    localStorage.removeItem('userData');
+    dispatch(userActions.logout());
     navigate('/auth/login');
   }
 

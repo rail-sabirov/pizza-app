@@ -3,13 +3,11 @@ import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from './LoginPage.module.css';
 import Headling from '../../components/Headling/Headling';
-import { FormEvent, FormEventHandler, useState } from 'react';
-import axios, { AxiosError } from 'axios';
-import { PREFIX } from '../../helpers/API';
-import { ILoginResponse } from '../../interfaces/auth.interface';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store';
-import { userActions } from '../../store/user.slice';
+import { FormEvent, FormEventHandler, useEffect, useState } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootStore } from '../../store/store';
+import { asyncLogin } from '../../store/user.slice';
 
 // Тип для данных форм
 export type LoginForm = {
@@ -28,35 +26,47 @@ export function LoginPage() {
 	// Хранилище: вызываем хук для получения нашей dispatch функции, для работы
 	const dispatch = useDispatch<AppDispatch>();
 
+	// Хранилище: получаем jwt при его изменении
+	const jwt = useSelector((state: RootStore) => state.user.jwt);
+
+	// Если jwt-токен есть, переходимуем на главную страницу
+	useEffect(() => {
+		if (jwt) {
+			navigate('/');
+		}
+	}, [jwt, navigate]);
+
 	// Функция для отправки логина и пароля через POST запрос 
 	// и получение access_token от API сервера
-	// -> (для теста a@gmail.com, 123)
+	// -> (для теста API сервера: a@gmail.com, 123)
 	const sendLogin = async (email: string, password: string) => {
-		try {
-			// Ожидаем получение ответа, отвер в формате ILoginResponse
-			const { data } = await axios.post<ILoginResponse>(`${PREFIX}/auth/login`, {
-				email,
-				password
-			});
+		dispatch(asyncLogin({ email, password }));
 
-			// Сохраняем полученный токен в localStorage
-			// старый способ: localStorage.setItem('userData', { jwt: data.access_token });
-			// новый способ : мы использовать подписку у redux, store.subscribe(), который автоматом сохраняет токен-- токен
+		// try {
+		// 	// Ожидаем получение ответа, отвер в формате ILoginResponse
+		// 	const { data } = await axios.post<ILoginResponse>(`${PREFIX}/auth/login`, {
+		// 		email,
+		// 		password
+		// 	});
 
-			// Добавить в redux
-			dispatch(userActions.addJwt(data.access_token));
+		// 	// Сохраняем полученный токен в localStorage
+		// 	// старый способ: localStorage.setItem('userData', { jwt: data.access_token });
+		// 	// новый способ : мы использовать подписку у redux, store.subscribe(), который автоматом сохраняет токен-- токен
 
-			// Переходим на главную страницу
-			navigate('/');
+		// 	// Добавить в redux
+		// 	dispatch(userActions.addJwt(data.access_token));
 
-		} catch (err) {
-			// Ошибка от Axios
-			if (err instanceof AxiosError) {
-				// можно так же получить response
-				setError(err.response?.data.message);
-			}
+		// 	// Переходим на главную страницу
+		// 	navigate('/');
 
-		}
+		// } catch (err) {
+		// 	// Ошибка от Axios
+		// 	if (err instanceof AxiosError) {
+		// 		// можно так же получить response
+		// 		setError(err.response?.data.message);
+		// 	}
+
+		// }
 	};
 
 	// Функция для отработки onSubmit формы

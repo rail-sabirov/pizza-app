@@ -1,7 +1,7 @@
 // -- Корневой store/хранилище на который мы будем навешивать slice (срезы/сущности)
 
 import { configureStore } from '@reduxjs/toolkit';
-import userSlice, { IUserPersistentState, IUserState, JWT_LOCALSTORAGE_KEY_NAME } from './user.slice';
+import userSlice, { IUserState, JWT_LOCALSTORAGE_KEY_NAME } from './user.slice';
 import { saveState } from './storage';
 
 // Конфигурируем наш stor, здесь подключаем 
