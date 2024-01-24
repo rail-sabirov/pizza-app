@@ -1,8 +1,10 @@
-import {PayloadAction, createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import { loadState } from './storage';
 import { PREFIX } from '../helpers/API';
 import axios, { AxiosError } from 'axios';
 import { ILoginResponse } from '../interfaces/auth.interface';
+import { IUserProfile } from '../interfaces/user.interface';
+import { RootStore } from './store';
 
 // Тип для jwt для хранения внутри slice -> JSON {jwt: значение}
 export interface IUserState {
@@ -11,7 +13,9 @@ export interface IUserState {
 
 export interface UserState extends IUserState {
     loginErrorMessage?: string;
+    userProfile?: IUserProfile;
 }
+
 
 // Ключ для хранения jwt, Экспортируем для использования в других файлах
 export const JWT_LOCALSTORAGE_KEY_NAME = 'userData';
@@ -38,9 +42,27 @@ export const asyncLogin = createAsyncThunk('user/login',
     }
 )
 
+// Получаем профиль пользователя, имя и email
+// Типизируем дженерик так чтобы можно было использовать Thunk API
+export const asyncGetUserProfile = createAsyncThunk<IUserProfile, void, { state: RootStore }>('user/getUserProfile', 
+    // Функция-обертка асинхронной фукнции для получения псевдо-синхронной функции (из redux-toolkit)
+    // используя thunk API получаем данные пользователя из хранилища Redux      
+    async (_, thunkApi) => {
+        const token = thunkApi.getState().user.jwt;
+        const { data } = await axios.get<IUserProfile>(`${PREFIX}/user/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return { name: data.name, email: data.email } as IUserProfile;
+    }
+);
+
 // -- Начальное состояние / инициализация при первом использовании
 const initState: UserState = {
-    jwt: loadState<UserState>(JWT_LOCALSTORAGE_KEY_NAME)?.jwt ?? null
+    jwt: loadState<UserState>(JWT_LOCALSTORAGE_KEY_NAME)?.jwt ?? null,
+    userProfile: undefined
 }
 
 // Слайс для пользователя, для хранения jwt-token'а
@@ -51,7 +73,7 @@ export const userSlice = createSlice({
     // -- Начальное состояние / инициализация при первом использовании
     initialState: initState,
 
-    // -- Набор функций, меняющих состояние
+    // -- Набор функций / actions, меняющих состояние данных/переменных слайса
     reducers: {
         // При выходе, очистим jwt-token
         logout: (preState) => {
@@ -64,7 +86,7 @@ export const userSlice = createSlice({
         }
     },
 
-    // Дополнительный параметр для асинхронных функций, подготовленных через createAsyncThunk
+    // Дополнительный редюсер для асинхронных функций, подготовленных через createAsyncThunk
     extraReducers: (builder) => {
         builder
             // При успешном логине (asyncLogin - fulfilled), добавляем jwt в state
@@ -81,6 +103,11 @@ export const userSlice = createSlice({
             // При ошибке логина (asyncLogin - rejected), выводим ошибку
             .addCase(asyncLogin.rejected, (preState, action) => {
                 preState.loginErrorMessage = action.error.message
+            })
+
+            // При успешном получении профиля (asyncGetUserProfile - fulfilled), добавляем профиль в state
+            .addCase(asyncGetUserProfile.fulfilled, (preState, action) => {
+                preState.userProfile = action.payload;
             })
 
         

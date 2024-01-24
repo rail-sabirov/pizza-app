@@ -3,9 +3,10 @@ import styles from './Layout.module.css';
 import Button from '../../components/Button/Button';
 
 import cn from 'classnames';
-import { AppDispatch } from '../../store/store';
-import { userActions } from '../../store/user.slice';
-import { useDispatch } from 'react-redux';
+import { AppDispatch, RootStore } from '../../store/store';
+import { asyncGetUserProfile, userActions } from '../../store/user.slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 
 export function Layout() {
@@ -20,14 +21,26 @@ export function Layout() {
     navigate('/auth/login');
   }
 
+  // Получаем данные профиля пользователя, ассинхронно
+  const userName = useSelector((state: RootStore) => state.user.userProfile?.name);
+  const userEmail = useSelector((state: RootStore) => state.user.userProfile?.email);
+
+  
+  useEffect(() => {
+    if (!userName || !userEmail) {
+      dispatch(asyncGetUserProfile());
+    }
+  }, [dispatch, userName, userEmail]);
+
+
   return (
     <div className={styles["layout"]}>
       <div className={styles["sidebar"]}>
 
         <div className={styles.user}>
           <img className={styles['user-avatar']} src="/avatar.png" alt="User avatar" />
-          <div className={styles['user-name']}>Admin Adminov</div>
-          <div className={styles['user-email']}>Admin.Adminov@email.com</div>
+          <div className={styles['user-name']}>{userName}</div>
+          <div className={styles['user-email']}> {userEmail}</div>
 
         </div>
         <div className={styles.menu}>
