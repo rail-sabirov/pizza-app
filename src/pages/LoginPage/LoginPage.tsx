@@ -24,7 +24,7 @@ export function LoginPage() {
 	const dispatch = useDispatch<AppDispatch>();
 
 	// Хранилище: подписываемся на изменение jwt и ошибку авторизации
-	const { jwt, loginErrorMessage } = useSelector((state: RootStore) => state.user);
+	const { jwt, authErrorMessage: authErrorMessage } = useSelector((state: RootStore) => state.user);
 
 	// Если jwt-токен есть, переходимуем на главную страницу
 	useEffect(() => {
@@ -46,7 +46,7 @@ export function LoginPage() {
 		event.preventDefault();
 
 		// Очищаем предыдущие ошибки
-		dispatch(userActions.clearLoginErrorMessage());
+		dispatch(userActions.clearAuthErrorMessage());
 
 		// Задаем union тип для 
 		const target = event.target as typeof event.target & LoginForm;
@@ -59,7 +59,7 @@ export function LoginPage() {
 	return (<div className={styles['login-container']}>
 		<Headling>Login</Headling>
 
-		{!!loginErrorMessage ? <div className={styles['error']}>{loginErrorMessage}</div> : ''}
+		{!!authErrorMessage ? <div className={styles['error']}>{authErrorMessage}</div> : ''}
 
 		<form className={styles['form']} onSubmit={submit}>
 			<div className={styles['field']}>
